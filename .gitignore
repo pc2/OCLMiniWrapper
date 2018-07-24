@@ -31,9 +31,15 @@
 *.out
 *.app
 
+# Don't version shellscripts
+*.sh
+
 # Created by https://www.gitignore.io/api/visualstudiocode
 
 ### VisualStudioCode ###
 .vscode/*
 
 # End of https://www.gitignore.io/api/visualstudiocode
+
+
+
