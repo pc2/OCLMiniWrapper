@@ -3,17 +3,17 @@
 
 #define USE_OCL_EXCEPTIONS
 
-#include <exception>
 #include <iostream>
 #include <string>
 #include <CL/cl.hpp>
+#include <stdexcept>
 
 namespace OCLWRAP{
 
 
 #ifndef USE_OCL_EXCEPTIONS
 #include "utils/inc/AOCLUtils/opencl.h"
-void OCLErrorToException(cl_int error){
+inline void OCLErrorToException(cl_int error){
     if(error!=0){ 
         aocl_utils::printError(error);
         std::cout<<" in DataAndBuffer::to_device \n"; 
@@ -23,12 +23,11 @@ void OCLErrorToException(cl_int error){
 // Define the needed exception classes here
 
 
-const char * error_to_text(cl_int error){
+inline const char * error_to_text(cl_int error){
     if(error == 0) {
         return "";
     }
-    switch(error)
-    {
+    switch(error)  {
         case -1:
             return("CL_DEVICE_NOT_FOUND");
         case -2:
@@ -133,8 +132,8 @@ const char * error_to_text(cl_int error){
 
 
 
-struct OCLException : public std::runtime_error
-{
+class OCLException : public std::runtime_error{
+public:    
     OCLException(std::string text)
         :runtime_error(text)
     {}
@@ -144,17 +143,17 @@ struct OCLException : public std::runtime_error
     {}
 
 
-	const char * what () const throw ()
-    {
-    	return (std::string("Open CL: ")+runtime_error::what()).c_str();
+	const char * what () const noexcept{
+    	return (std::string("OpenCL Error: ")+std::runtime_error::what()).c_str();
     }
 };
 
 
 //TODO: Use better exceptions for this
-void OCLErrorToException(cl_int error){
+inline void OCLErrorToException(cl_int error){
     if (error != 0){
-        throw std::runtime_error(std::string("OCL Runtime error ID: ") + std::to_string(error));
+        //throw std::runtime_error(std::string("OCL Runtime error ID: ") + std::to_string(error));
+        throw OCLException(error);
     }
 }
 #endif 

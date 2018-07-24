@@ -30,12 +30,17 @@ namespace OCLWRAP {
 
         Events& operator=(const Events& other) = default;
         Events& operator=(Events&& other) = default;
-        
+
+
         //Joins event-sets
         inline Events operator+(const Events& other){
             std::vector<cl_event> merge = wrapped_events;
-            merge.insert(merge.end(),other.wrapped_events.begin(),other.wrapped_events.end());
+            merge.insert(merge.end(),other.wrapped_events.cbegin(),other.wrapped_events.cend());
             return Events(std::move(merge));
+        }
+
+        Events& operator+=(const Events& other){
+            wrapped_events.insert(wrapped_events.end(),other.wrapped_events.cbegin(),other.wrapped_events.cend());
         }
 
         int size() const {
