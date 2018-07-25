@@ -1,7 +1,19 @@
+
 #ifndef OCL_ERRORTOEXCEPTION_H
 #define OCL_ERRORTOEXCEPTION_H
 
+/**
+ * If USE_OCL_EXCEPTIONS is defined:
+ * Contains the OCLException class, which respresents any exception equivalent to an error code. 
+ * OCLErrorToException(cl_int error) checks whether the error code handed to it is 0, raises a fitting OCLException otherwise.
+ * 
+ * If USE_OCL_EXCEPTIONS is not defined:
+ * OCLErrorToException(cl_int error) checks whether the error code handed to it is 0, prints the name of the code. 
+ * 
+ * @author: Erik Messerli (2018)
+ */
 #define USE_OCL_EXCEPTIONS
+
 
 #include <iostream>
 #include <string>
@@ -20,7 +32,6 @@ inline void OCLErrorToException(cl_int error){
     }
 }
 #else
-// Define the needed exception classes here
 
 
 inline const char * error_to_text(cl_int error){

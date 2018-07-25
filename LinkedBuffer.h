@@ -1,8 +1,15 @@
 #ifndef OCLBUFFERWRAPPER_H
 #define OCLBUFFERWRAPPER_H
 /**
- * By Erik Messerli (2018)
+ * A linked buffer wraps both the local and remote part of a buffer.
+ * A buffer is associated to a cl_context and a cl_command_queue, though the later may be changed.
+ * The "host" field represents the data on the host side. It can be transported by calling to_device(). 
+ * The host side bufer can be updated with the data from the device by calling from_device().
+ * These functions use the given queue, can be passed Events-objects to wait for and will return an Events object that can be waited on.
+ * Make sure to update only Host OR Device side at any point in time because no mechanism exists to merge them.
+ * All of the other functions are just utilities for the host to get data in/out of the host side array.
  * 
+ * @author: Erik Messerli (2018)
  * */
 #include <iostream>
 #include <stdio.h>
@@ -13,11 +20,12 @@
 #include <CL/cl.hpp>
 #include <cassert>
 
-//#include "utils/inc/AOCLUtils/opencl.h"
-
 #include "Events.h"
 #include "OCLErrorToException.h"
 
+/**
+ * Altera requires a 64 bit alignment of data to effectively transfer it between Host and Board. Change as required.
+ * */
 #define AOCL_ALIGNMENT 64
 
 
@@ -73,7 +81,7 @@ public:
   LinkedBuffer(const LinkedBuffer& other) = delete;
   LinkedBuffer& operator=(const LinkedBuffer& other) = delete;
   
-  //TODO: Can create reasonable move operators if needed. 
+  //TODO: Could create reasonable move operators if needed. 
   LinkedBuffer(LinkedBuffer&& other) = delete;
   LinkedBuffer& operator=(LinkedBuffer&& other) = delete;
   
