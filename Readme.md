@@ -14,9 +14,9 @@ Events objects may be merged with the + or += operator. Events objects can be tr
 
 WorkDimensions classes are also easy to integrate in any existing setup, but are even easier to use with the provided wrappers for kernel calls, as the following example shows:
 
-> #include "OCLWrapBasics.h"
-> WorkDimensions dims{number_of_workers};
-> dims.implementation_chooses_local_distribution();
-> Events kernel_finished = enqueueRange(state.queue,state.kernel,dims,state.wait_for_writes);
+> #include "OCLWrapBasics.h"\
+> WorkDimensions dims{number_of_workers};\
+> dims.implementation_chooses_local_distribution();\
+> Events kernel_finished = enqueueRange(state.queue,state.kernel,dims,state.wait_for_writes);\
 
 
