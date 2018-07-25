@@ -2,7 +2,7 @@
 #define OCLWRAPBASICS_H
 /**
  * Contains basic functions that are equivalent to the most commonly needed functionality, but commonly take fewer arguments.
- * They also provide built-in error handling, so it's not possible to forget.
+ * They also provide built-in error handling, so it's impossible to forget.
  * 
  * @author: Erik Messerli (2018)
  * */
@@ -65,22 +65,19 @@ namespace OCLWRAP {
         OCLErrorToException(error);
     }
 
-
-    template<typename T> inline void enqueueWriteBuffer(cl_command_queue queue, cl_mem buffer,size_t size_in_bytes, T* host_ptr, const Events& wait_for){
+    template<typename T> inline Events enqueueWriteBuffer(cl_command_queue queue, cl_mem buffer, size_t size_in_bytes, T* host_ptr, const Events& wait_for){
         cl_event result_event;
         cl_int error = clEnqueueWriteBuffer(queue,buffer,CL_TRUE,0,size_in_bytes,host_ptr,wait_for.size(),wait_for.data(),&result_event);
         OCLErrorToException(error);
         return Events(result_event);
     }
 
-
-    template<typename T> inline void enqueueReadBuffer(cl_command_queue queue, cl_mem buffer,size_t size_in_bytes, T* host_ptr, const Events& wait_for){
+    template<typename T> inline Events enqueueReadBuffer(cl_command_queue queue, cl_mem buffer, size_t size_in_bytes, T* host_ptr, const Events& wait_for){
         cl_event result_event;
         cl_int error = clEnqueueReadBuffer(queue,buffer,CL_TRUE,0,size_in_bytes,host_ptr,wait_for.size(),wait_for.data(), &result_event);
         OCLErrorToException(error);
         return Events(result_event);
     }
-
 
 
 }

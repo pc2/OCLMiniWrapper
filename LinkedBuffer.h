@@ -22,6 +22,7 @@
 
 #include "Events.h"
 #include "OCLErrorToException.h"
+#include "OCLWrapBasics.h"
 
 /**
  * Altera requires a 64 bit alignment of data to effectively transfer it between Host and Board. Change as required.
@@ -126,18 +127,20 @@ public:
 
 
   Events to_device(const Events& wait_for = Events()){
-    cl_event result_event;
+    return enqueueWriteBuffer(queue, buffer, sizeof(T)*size, host_ptr(), wait_for);
+    /*cl_event result_event;
     cl_int error = clEnqueueWriteBuffer(queue,buffer,CL_TRUE,0,sizeof(T)*size,host_ptr(),wait_for.size(),wait_for.data(),&result_event);
     OCLErrorToException(error);
-    return Events(result_event);
+    return Events(result_event);*/
   }
 
 
   Events from_device(const Events& wait_for){
-    cl_event result_event;
+    return enqueueReadBuffer(queue, buffer, sizeof(T)*size, host_ptr(), wait_for);
+    /*cl_event result_event;
     cl_int error = clEnqueueReadBuffer(queue,buffer,CL_TRUE,0,sizeof(T)*size,host_ptr(),wait_for.size(),wait_for.data(), &result_event);
     OCLErrorToException(error);
-    return Events(result_event);
+    return Events(result_event);*/
   }
 
   void as_kernel_arg(cl_kernel kernel, cl_uint arg_c){
