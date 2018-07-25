@@ -14,14 +14,14 @@ Events objects may be merged with the + or += operator. Events objects can be tr
 
 WorkDimensions classes are also easy to integrate in any existing setup, but are even easier to use with the provided wrappers for kernel calls, as the following 4x4 example shows:
 
-> #include "OCLWrapBasics.h"\
-> WorkDimensions dims{4,4};\
-> dims.implementation\_chooses\_local_distribution();\
-> Events kernel_finished = enqueueRange(queue,kernel,dims,wait\_for\_writes);
+    #include "OCLWrapBasics.h"
+    WorkDimensions dims{4,4};
+    dims.implementation\_chooses\_local_distribution();
+    Events kernel_finished = enqueueRange(queue,kernel,dims,wait\_for\_writes);
 
-Note that wait\_for\_writes is of type Events, as well as the output.\
+Note that wait\_for\_writes is of type Events, as well as the output.
 
-> Events enqueue(Read/Write)Buffer(cl\_command_queue queue, cl\_mem buffer, size\_t size\_in_bytes, T* host\_ptr, const Events& wait\_for)
+    Events enqueue (Read/Write)Buffer(cl\_command_queue queue, cl\_mem buffer, size\_t size\_in_bytes, T* host\_ptr, const Events& wait\_for)
 
 Works just like expected, too. However there is an even more compact way of handling buffers coming up.
 
@@ -42,7 +42,7 @@ And that's all the parameters needed to initialize an exchange.
 
 Example:
 
-> LinkedBuffer<float> buffer(context,10,queue);\
-> buffer.host[0] = 1; //Set host side values\
-> Events wait = buffer.to_device(); //transfer host side values to device\
+    LinkedBuffer<float> buffer(context,10,queue);
+    buffer.host[0] = 1; //Set host side values
+    Events wait = buffer.to_device(); //transfer host side values to device\
  
