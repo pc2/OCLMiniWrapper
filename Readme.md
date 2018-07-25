@@ -1,12 +1,14 @@
 
-#Noise Reducing Wrapper for OpenCL
+# Noise Reducing Wrapper for OpenCL
 
-##What is this?
+## What is this?
+
 This is a tiny C++ wrapper for OpenCL that aims to reduce some of the noise when using the OpenCL 1.0 API.
 The provided function interfaces take fewer, easier to handle arguments.
 All contained objects support full interoperability with OpenCL in case rarely used behaviour not covered by the library is needed.
 
-##Where do I start
+## Where do I start
+
 The Events class simply wraps any amount of cl_event entries and returns them in the proper form (size(),data()) for use in OpenCL calls.
 Events objects may be merged with the + or += operator. Events objects can be trivially created from cl_event entries by calling Events(cl_event) or extended by ust adding a cl_event to a Events object using the + operator.
 
