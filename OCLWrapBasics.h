@@ -39,8 +39,7 @@ namespace OCLWRAP {
      * Enqueue an SWI kernel. No need to pass any WorkDimensions.
      * */
     inline Events enqueueSingle(cl_command_queue queue, cl_kernel kernel, const Events& wait_for){
-        WorkDimensions dims{1};
-        dims.implementation_chooses_local_distribution();
+        WorkDimensions dims;
         return enqueueRange(queue,kernel,dims,wait_for);        
     }
 
@@ -65,6 +64,24 @@ namespace OCLWRAP {
         cl_int error = clFinish(queue); 
         OCLErrorToException(error);
     }
+
+
+    template<typename T> inline void enqueueWriteBuffer(cl_command_queue queue, cl_mem buffer,size_t size_in_bytes, T* host_ptr, const Events& wait_for){
+        cl_event result_event;
+        cl_int error = clEnqueueWriteBuffer(queue,buffer,CL_TRUE,0,size_in_bytes,host_ptr,wait_for.size(),wait_for.data(),&result_event);
+        OCLErrorToException(error);
+        return Events(result_event);
+    }
+
+
+    template<typename T> inline void enqueueReadBuffer(cl_command_queue queue, cl_mem buffer,size_t size_in_bytes, T* host_ptr, const Events& wait_for){
+        cl_event result_event;
+        cl_int error = clEnqueueReadBuffer(queue,buffer,CL_TRUE,0,size_in_bytes,host_ptr,wait_for.size(),wait_for.data(), &result_event);
+        OCLErrorToException(error);
+        return Events(result_event);
+    }
+
+
 
 }
 
