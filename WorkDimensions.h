@@ -1,5 +1,5 @@
-#ifndef OCLWORKDIMS_H
-#define OCLWORKDIMS_H
+#ifndef OCLWRAPWORKDIMS_H
+#define OCLWRAPWORKDIMS_H
 
 #include <CL/cl.hpp>
 #include <vector>

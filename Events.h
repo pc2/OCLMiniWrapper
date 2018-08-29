@@ -23,32 +23,49 @@ namespace OCLWRAP {
         friend Events operator+(cl_event lhs, Events&& rhs);    
     public:
         Events() = default;
-        Events(const Events& other) = default;
+        //Events(const Events& other) = default;
         Events(Events&& other) = default;
-        explicit Events(cl_event ev)
+        explicit Events(cl_event& ev)
             :wrapped_events{ev}
-        {}
-        explicit Events(const std::vector<cl_event>& vev)
-            :wrapped_events(vev)
-        {}
+        {
+          ev = nullptr;
+        }        
+        explicit Events(cl_event&& ev)
+            :wrapped_events{ev}
+        {
+          ev = nullptr;
+        }
         explicit Events(std::vector<cl_event>&& vev)
             :wrapped_events(std::move(vev))
         {}
 
-        Events& operator=(const Events& other) = default;
+        ~Events() {
+          for (auto ev : wrapped_events) {
+            clReleaseEvent(ev);
+          }
+        }
+
+        //Events& operator=(const Events& other) = default;
         Events& operator=(Events&& other) = default;
 
 
-        //Joins event-sets
-        inline Events operator+(const Events& other) const{
-            std::vector<cl_event> merge = wrapped_events;
-            merge.insert(merge.end(),other.wrapped_events.cbegin(),other.wrapped_events.cend());
-            return Events(std::move(merge));
+        inline void absorb(Events& other) {
+          wrapped_events.insert(wrapped_events.end(),other.wrapped_events.begin(),other.wrapped_events.end());
+          other.wrapped_events.clear();
+        }
+        inline void absorb(Events&& other) {
+          wrapped_events.insert(wrapped_events.end(),other.wrapped_events.begin(),other.wrapped_events.end());
+          other.wrapped_events.clear();
+        }
+        inline void absorb(cl_event& event) {
+          wrapped_events.push_back(event);
+          event = nullptr;
+        }
+        inline void absorb(cl_event&& event) {
+          wrapped_events.push_back(event);   
+          event = nullptr; 
         }
 
-        Events& operator+=(const Events& other){
-            wrapped_events.insert(wrapped_events.end(),other.wrapped_events.cbegin(),other.wrapped_events.cend());
-        }
 
         int size() const {
             return wrapped_events.size();
@@ -69,28 +86,6 @@ namespace OCLWRAP {
         std::vector<cl_event> wrapped_events;
     };
 
-
-
-    inline Events operator+(const Events& lhs, cl_event rhs){
-        Events result(lhs);
-        result.wrapped_events.push_back(rhs);
-        return result;
-    }
-    inline Events operator+(cl_event lhs, const Events& rhs){
-        Events result(rhs);
-        result.wrapped_events.push_back(lhs);
-        return result;
-    }
-    inline Events operator+(Events&& lhs, cl_event rhs){
-        Events result(std::move(lhs));
-        result.wrapped_events.push_back(rhs);
-        return result;
-    }
-    inline Events operator+(cl_event lhs, Events&& rhs){
-        Events result(std::move(rhs));
-        result.wrapped_events.push_back(lhs);
-        return result;
-    }
 
 
 }

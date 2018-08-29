@@ -13,4 +13,4 @@
 
 #rsync -r -v --update src erikm@fe-1.cc.pc2.uni-paderborn.de:hpcg_opencl
 
-rsync -r -v --update . erikm@fe-1.cc.pc2.uni-paderborn.de:NoiseReducingWrapper --exclude ToFrontend.sh
+rsync -r -v --update . erikm@fe-1.cc.pc2.uni-paderborn.de:/upb/scratch/departments/pc2/groups/pc2-cc-user/erikm/NoiseReducingWrapper --exclude ToFrontend.sh  --exclude={".git*",".vscode*"}

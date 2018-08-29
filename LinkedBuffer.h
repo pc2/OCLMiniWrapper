@@ -1,5 +1,5 @@
-#ifndef OCLBUFFERWRAPPER_H
-#define OCLBUFFERWRAPPER_H
+#ifndef OCLWRAPBUFFERWRAPPER_H
+#define OCLWRAPBUFFERWRAPPER_H
 /**
  * A linked buffer wraps both the local and remote part of a buffer.
  * A buffer is associated to a cl_context and a cl_command_queue, though the later may be changed.
@@ -128,27 +128,22 @@ public:
 
   Events to_device(const Events& wait_for = Events()){
     return enqueueWriteBuffer(queue, buffer, sizeof(T)*size, host_ptr(), wait_for);
-    /*cl_event result_event;
-    cl_int error = clEnqueueWriteBuffer(queue,buffer,CL_TRUE,0,sizeof(T)*size,host_ptr(),wait_for.size(),wait_for.data(),&result_event);
-    OCLErrorToException(error);
-    return Events(result_event);*/
   }
 
 
   Events from_device(const Events& wait_for){
     return enqueueReadBuffer(queue, buffer, sizeof(T)*size, host_ptr(), wait_for);
-    /*cl_event result_event;
-    cl_int error = clEnqueueReadBuffer(queue,buffer,CL_TRUE,0,sizeof(T)*size,host_ptr(),wait_for.size(),wait_for.data(), &result_event);
-    OCLErrorToException(error);
-    return Events(result_event);*/
   }
 
+  /**
+   * Allows easily passing a linked buffer as an argument to a kernel. 
+   **/
   void as_kernel_arg(cl_kernel kernel, cl_uint arg_c){
     cl_int error = clSetKernelArg(kernel,arg_c++,sizeof(cl_mem),&buffer); 
     OCLErrorToException(error);
-    //cl_int clSetKernelArg ( 	cl_kernel kernel,cl_uint arg_index,size_t arg_size,const void *arg_value)
   }
 
+  //Same as .host, but makes it more obvious that it's a pointer.
   inline T* host_ptr(){
     return host;
   }
